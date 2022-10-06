@@ -1,0 +1,31 @@
+---
+Debugger:
+  DebugThreshold: error
+  TestMode: '0'
+Description: Znuny Health Status
+FrameworkVersion: 6.0.x
+Provider:
+  Operation:
+    HealthStatusGet:
+      Description: Provides monitoring information
+      MappingInbound:
+        Type: Simple
+      MappingOutbound:
+        Type: Simple
+      Type: Znuny::HealthStatus
+  Transport:
+    Config:
+      AdditionalHeaders: ~
+      KeepAlive: ''
+      MaxLength: '100000000'
+      RouteOperationMapping:
+        HealthStatusGet:
+          RequestMethod:
+          - GET
+          - POST
+          Route: /HealthStatusGet
+    Type: HTTP::REST
+RemoteSystem: ''
+Requester:
+  Transport:
+    Type: ''
