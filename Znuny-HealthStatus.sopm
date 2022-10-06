@@ -3,8 +3,7 @@
     <Name>Znuny-HealthStatus</Name>
     <Version>6.0.1</Version>
     <ChangeLog Version="6.0.1" Date="2022-10-07 00:00:32 +0200">Initial release</ChangeLog>
-    <Framework>6.0.x</Framework>
-    <PackageRequired Version="6.0.76">Znuny4OTRS-Repo</PackageRequired>
+    <Framework>6.4.x</Framework>
     <Vendor>Znuny GmbH</Vendor>
     <URL>http://znuny.com/</URL>
     <License>GNU AFFERO GENERAL PUBLIC LICENSE Version 3, November 2007</License>
@@ -27,7 +26,7 @@
         Die Installation wurde erfolgreich abgeschlossen. Kopieren Sie die folgende URL um sie in Ihrem Monitoring zu nutzen:
         &lt;br/&gt;
         &lt;br/&gt;
-        &lt;b id="OTRSURL"&gt;Fehler beim Ermitteln der URL.&lt;/b&gt;
+        &lt;b id="ZNUNYURL"&gt;Fehler beim Ermitteln der URL.&lt;/b&gt;
         &lt;br/&gt;
         &lt;br/&gt;
         Alternativ kann der API Schlüssel in der SysConfig 'Znuny::HealthStatus::API::Key' gefunden werden.
@@ -43,7 +42,7 @@
         The installation was completed successfully. Copy the following URL for later use in your monitoring solution:
         &lt;br/&gt;
         &lt;br/&gt;
-        &lt;b id="OTRSURL"&gt;Error while getting OTRS URL.&lt;/b&gt;
+        &lt;b id="ZNUNYURL"&gt;Error while getting Znuny URL.&lt;/b&gt;
         &lt;br/&gt;
         &lt;br/&gt;
         Alternatively, the API key can be found in the SysConfig 'Znuny::HealthStatus::API::Key'.

@@ -125,7 +125,7 @@ creates or updates web services
     # name of the file will be the name of the web service
 
     my $Success = $ZnunyHelperObject->_WebserviceCreate(
-        SubDir => 'Znuny4OTRSAssetDesk', # optional
+        SubDir => 'ZnunyAssetDesk', # optional
     );
 
     OR:
@@ -287,7 +287,7 @@ sub _SetupApiKey {
                     $URLStub =~ s{<OTRS_CONFIG_([^>]+)>}{$URLConfigs{ $1 }}gxms;
 
                     # manipulate Message content
-                    $Description =~ s{(<b \s id=\"OTRSURL\">)[^<]+(</b>)}{$1$URLStub$APIKey$2}xmsi;
+                    $Description =~ s{(<b \s id=\"ZNUNYURL\">)[^<]+(</b>)}{$1$URLStub$APIKey$2}xmsi;
                 }
             }
 
