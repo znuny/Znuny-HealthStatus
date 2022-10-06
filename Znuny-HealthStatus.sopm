@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<otrs_package version="1.0">
+    <Name>Znuny-HealthStatus</Name>
+    <Version>6.0.0</Version>
+    <Framework>6.0.x</Framework>
+    <PackageRequired Version="6.0.76">Znuny4OTRS-Repo</PackageRequired>
+    <Vendor>Znuny GmbH</Vendor>
+    <URL>http://znuny.com/</URL>
+    <License>GNU AFFERO GENERAL PUBLIC LICENSE Version 3, November 2007</License>
+    <Description Lang="en">This package contains the functionality to provide monitoring information.</Description>
+    <Description Lang="de">Dieses Paket enthält die Funktionalität um Monitoring Informationen bereitzustellen.</Description>
+    <Filelist>
+        <File Permission="660" Location="Kernel/Config/Files/XML/ZnunyHealthStatus.xml"/>
+        <File Permission="660" Location="Kernel/GenericInterface/Operation/Znuny/HealthStatus.pm"/>
+        <File Permission="660" Location="Kernel/Language/de_ZnunyHealthStatus.pm"/>
+        <File Permission="660" Location="scripts/test/ZnunyHealthStatus/GenericInterface/Operation/Znuny/HealthStatus.t"/>
+        <File Permission="660" Location="scripts/test/ZnunyHealthStatus/var/packagesetup/ZnunyHealthStatus.t"/>
+        <File Permission="660" Location="var/packagesetup/ZnunyHealthStatus.pm"/>
+        <File Permission="660" Location="var/webservices/examples/ZnunyHealthStatus.yml"/>
+    </Filelist>
+    <IntroInstall Type="post" Title="Znuny Health Status" Lang="de">
+        &lt;br/&gt;
+        &lt;b&gt;Znuny Health wurde installiert.&lt;/b&gt;
+        &lt;br/&gt;
+        &lt;br/&gt;
+        Die Installation wurde erfolgreich abgeschlossen. Kopieren Sie die folgende URL um sie in Ihrem Monitoring zu nutzen:
+        &lt;br/&gt;
+        &lt;br/&gt;
+        &lt;b id="OTRSURL"&gt;Fehler beim Ermitteln der URL.&lt;/b&gt;
+        &lt;br/&gt;
+        &lt;br/&gt;
+        Alternativ kann der API Schlüssel in der SysConfig 'Znuny::HealthStatus::API::Key' gefunden werden.
+        &lt;br/&gt;
+        &lt;br/&gt;
+        Ihr Znuny Team
+    </IntroInstall>
+    <IntroInstall Type="post" Title="Znuny Health Status" Lang="en">
+        &lt;br/&gt;
+        &lt;b&gt;Znuny Health installed successfuly!&lt;/b&gt;
+        &lt;br/&gt;
+        &lt;br/&gt;
+        The installation was completed successfully. Copy the following URL for later use in your monitoring solution:
+        &lt;br/&gt;
+        &lt;br/&gt;
+        &lt;b id="OTRSURL"&gt;Error while getting OTRS URL.&lt;/b&gt;
+        &lt;br/&gt;
+        &lt;br/&gt;
+        Alternatively, the API key can be found in the SysConfig 'Znuny::HealthStatus::API::Key'.
+        &lt;br/&gt;
+        &lt;br/&gt;
+        Your Znuny Team
+    </IntroInstall>
+    <CodeInstall Type="post"><![CDATA[
+        $Kernel::OM->Get('var::packagesetup::ZnunyHealthStatus')->CodeInstall();
+    ]]></CodeInstall>
+    <CodeReinstall Type="post"><![CDATA[
+        $Kernel::OM->Get('var::packagesetup::ZnunyHealthStatus')->CodeReinstall();
+    ]]></CodeReinstall>
+    <CodeUpgrade Type="post"><![CDATA[
+        $Kernel::OM->Get('var::packagesetup::ZnunyHealthStatus')->CodeUpgrade();
+    ]]></CodeUpgrade>
+    <CodeUninstall Type="pre"><![CDATA[
+        $Kernel::OM->Get('var::packagesetup::ZnunyHealthStatus')->CodeUninstall();
+    ]]></CodeUninstall>
+</otrs_package>
