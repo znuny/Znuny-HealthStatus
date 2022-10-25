@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <otrs_package version="1.0">
     <Name>Znuny-HealthStatus</Name>
-    <Version>6.0.1</Version>
+    <Version>6.4.1</Version>
+    <ChangeLog Version="6.4.1" Date="2022-10-25 10:20:37 +0200">Initial release for Znuny 6.4.</ChangeLog>
     <ChangeLog Version="6.0.1" Date="2022-10-07 00:00:32 +0200">Initial release</ChangeLog>
     <Framework>6.4.x</Framework>
     <Vendor>Znuny GmbH</Vendor>
