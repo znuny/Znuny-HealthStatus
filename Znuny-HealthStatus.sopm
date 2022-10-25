@@ -23,13 +23,7 @@
         &lt;b&gt;Znuny Health wurde installiert.&lt;/b&gt;
         &lt;br/&gt;
         &lt;br/&gt;
-        Die Installation wurde erfolgreich abgeschlossen. Kopieren Sie die folgende URL um sie in Ihrem Monitoring zu nutzen:
-        &lt;br/&gt;
-        &lt;br/&gt;
-        &lt;b id="ZNUNYURL"&gt;Fehler beim Ermitteln der URL.&lt;/b&gt;
-        &lt;br/&gt;
-        &lt;br/&gt;
-        Alternativ kann der API Schlüssel in der SysConfig 'Znuny::HealthStatus::API::Key' gefunden werden.
+        Der API-Schlüssel kann in der SysConfig 'Znuny::HealthStatus::API::Key' gefunden werden.
         &lt;br/&gt;
         &lt;br/&gt;
         Ihr Znuny Team
@@ -39,13 +33,7 @@
         &lt;b&gt;Znuny Health installed successfuly!&lt;/b&gt;
         &lt;br/&gt;
         &lt;br/&gt;
-        The installation was completed successfully. Copy the following URL for later use in your monitoring solution:
-        &lt;br/&gt;
-        &lt;br/&gt;
-        &lt;b id="ZNUNYURL"&gt;Error while getting Znuny URL.&lt;/b&gt;
-        &lt;br/&gt;
-        &lt;br/&gt;
-        Alternatively, the API key can be found in the SysConfig 'Znuny::HealthStatus::API::Key'.
+        The API key can be found in the SysConfig 'Znuny::HealthStatus::API::Key'.
         &lt;br/&gt;
         &lt;br/&gt;
         Your Znuny Team

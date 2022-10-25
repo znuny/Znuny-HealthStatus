@@ -1,12 +1,11 @@
 # --
-# Copyright (C) 2012-2022 Znuny GmbH, http://znuny.com/
+# Copyright (C) 2012-2022 Znuny GmbH, https://znuny.com/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
-# the enclosed file COPYING for license information (GPL). If you
-# did not receive this file, see https://www.gnu.org/licenses/gpl-3.0.txt.
+# the enclosed file COPYING for license information (AGPL). If you
+# did not receive this file, see http://www.gnu.org/licenses/agpl.txt.
 # --
-
-package var::packagesetup::ZnunyHealthStatus;     ## no critic
+package var::packagesetup::ZnunyHealthStatus;    ## no critic
 
 use strict;
 use warnings;
@@ -14,7 +13,6 @@ use utf8;
 
 our @ObjectDependencies = (
     'Kernel::Config',
-    'Kernel::Output::HTML::Layout',
     'Kernel::System::Main',
     'Kernel::System::SysConfig',
     'Kernel::System::ZnunyHelper',
@@ -24,7 +22,7 @@ use Kernel::System::VariableCheck qw(:all);
 
 =head1 NAME
 
-ZnunyHealthStatus.pm - code to execute during package installation
+var::packagesetup::ZnunyHealthStatus - code to execute during package installation
 
 =head1 SYNOPSIS
 
@@ -155,7 +153,6 @@ sub _SetupWebserviceCreate {
     return $Success;
 }
 
-
 =head2 _SetupWebserviceDelete()
 
 delete the installed web service
@@ -168,7 +165,7 @@ sub _SetUpWebserviceDelete {
     my ( $Self, %Param ) = @_;
 
     my $ZnunyHelperObject = $Kernel::OM->Get('Kernel::System::ZnunyHelper');
-    my $Success = $ZnunyHelperObject->_WebserviceDelete(
+    my $Success           = $ZnunyHelperObject->_WebserviceDelete(
         Webservices => {
             'HealthStatus' => 1,
         }
@@ -193,7 +190,6 @@ sub _SetupApiKey {
     my $ZnunyHelperObject = $Kernel::OM->Get('Kernel::System::ZnunyHelper');
 
     if ( !$ConfigObject->Get('Znuny::HealthStatus::API::Key') ) {
-
         my $APIKey = $MainObject->GenerateRandomString(
             Length => 40,
         );
@@ -209,94 +205,7 @@ sub _SetupApiKey {
             ],
         );
 
-        $ZnunyHelperObject->_RebuildConfig()
-    }
-
-    # disable redefine warnings in this scope
-    {
-        no warnings 'redefine'; ## no critic
-
-        sub Kernel::Modules::AdminPackageManager::_MessageGet {    ## no critic
-            my ( $Self, %Param ) = @_;
-
-            my $Title       = '';
-            my $Description = '';
-            my $Use         = 0;
-
-            my $Language = $Kernel::OM->Get('Kernel::Output::HTML::Layout')->{UserLanguage}
-                || $Kernel::OM->Get('Kernel::Config')->Get('DefaultLanguage');
-
-            if ( $Param{Info} ) {
-                TAG:
-                for my $Tag ( @{ $Param{Info} } ) {
-                    if ( $Param{Type} ) {
-                        next TAG if $Tag->{Type} !~ /^$Param{Type}/i;
-                    }
-                    $Use = 1;
-                    if ( $Tag->{Format} && $Tag->{Format} =~ /plain/i ) {
-                        $Tag->{Content} = '<pre class="contentbody">' . $Tag->{Content} . '</pre>';
-                    }
-                    if ( !$Description && $Tag->{Lang} eq 'en' ) {
-                        $Description = $Tag->{Content};
-                        $Title       = $Tag->{Title};
-                    }
-
-                    if ( $Tag->{Lang} eq $Language ) {
-                        $Description = $Tag->{Content};
-                        $Title       = $Tag->{Title};
-                    }
-                }
-                if ( !$Description && $Use ) {
-                    for my $Tag ( @{ $Param{Info} } ) {
-                        if ( !$Description ) {
-                            $Description = $Tag->{Content};
-                            $Title       = $Tag->{Title};
-                        }
-                    }
-                }
-            }
-            return if !$Description && !$Title;
-
-# ---
-# Znuny-HealthStatus
-# ---
-            if ( $Title eq 'Znuny Health Status' ) {
-
-                $Kernel::OM->ObjectsDiscard(
-                    Objects => ['Kernel::Config'],
-                );
-
-                $Kernel::OM->Get('Kernel::Output::HTML::Layout')->{FilterElementPost}
-                    = $Kernel::OM->Get('Kernel::Config')->Get('Frontend::Output::FilterElementPost');
-
-                my $APIKey = $Kernel::OM->Get('Kernel::Config')->Get('Znuny::HealthStatus::API::Key');
-
-                if ($APIKey) {
-                    my %URLConfigs = (
-                        HttpType    => '',
-                        FQDN        => '',
-                        ScriptAlias => '',
-                    );
-
-                    for my $ConfigName ( sort keys %URLConfigs ) {
-                        $URLConfigs{$ConfigName} = $Kernel::OM->Get('Kernel::Config')->Get($ConfigName);
-                    }
-
-                    my $URLStub
-                        = '<OTRS_CONFIG_HttpType>://<OTRS_CONFIG_FQDN>/<OTRS_CONFIG_ScriptAlias>nph-genericinterface.pl/Webservice/HealthStatus/HealthStatusGet?APIKey=';
-                    $URLStub =~ s{<OTRS_CONFIG_([^>]+)>}{$URLConfigs{ $1 }}gxms;
-
-                    # manipulate Message content
-                    $Description =~ s{(<b \s id=\"ZNUNYURL\">)[^<]+(</b>)}{$1$URLStub$APIKey$2}xmsi;
-                }
-            }
-
-# ---
-            return (
-                Description => $Description,
-                Title       => $Title,
-            );
-        }
+        $ZnunyHelperObject->_RebuildConfig();
     }
 
     return 1;
