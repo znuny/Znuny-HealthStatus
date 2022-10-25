@@ -8,11 +8,11 @@ Provides a web service operation and web service to access data of your Znuny in
 
 **Prerequisites**
 
-- Znuny 6.4 
+- Znuny 6.4
 
 **Installation**
 
-Install it via the "Znuny OpenSource Add-ons" repository from the package manager or 
+Install it via the "Znuny OpenSource Add-ons" repository from the package manager or
 download the [package](https://addons.znuny.com/api/addon_repos/public/2555/latest) and upload it via admin interface -> package manager.
 
 **Usage**

@@ -12,7 +12,7 @@
         </Value>
     </Setting>
     <Setting Name="Znuny::HealthStatus::API::Key" Required="1" Valid="1">
-        <Description Translatable="1">This configuration defines the API key a client has to provide for accessing the Znuny Health Status web service (min. 20 character).</Description>
+        <Description Translatable="1">This configuration defines the API key a client has to provide for accessing the Znuny Health Status web service (min. 20 characters).</Description>
         <Navigation>Core::API</Navigation>
         <Value>
             <Item ValueType="String" ValueRegex=".{0}|.{20,40}"></Item>
