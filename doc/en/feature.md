@@ -1,9 +1,8 @@
 # Functionality
 
-This package provided a monitoring web service.
-The webservice provides information and details about the daemon tasks and the mail queue state.
+This package contains a monitoring web service which provides information and details about the daemon tasks and the mail queue state.
 
-This are the default modules from the recurrent cron tasks.
+These are the default modules from the recurrent cron tasks:
 
 - ArticleSearchIndexRebuild
 - CommunicationLogDelete
@@ -25,11 +24,9 @@ This are the default modules from the recurrent cron tasks.
 - TicketUnlockTimeout
 - WebUploadCacheCleanup
 
-Automatic executed (scheduled) GenericAgents are also returned by the web service.
+Automatically executed (scheduled) generic agents are also returned by the web service.
 
-The API key required for the request is generated automatically and can be changed later in the system configuration.
-
-The name of of the setting is `Znuny::HealthStatus::API::Key`.
+The API key required for the request is generated automatically and can be changed later in the system configuration `Znuny::HealthStatus::API::Key`.
 
 
 Example requests:
@@ -41,7 +38,7 @@ $ curl "${URL}?APIKey=jhgfdsaewrtzui1234567"
 ```
 
 ::: warning  :::
-We recommend using the POST request to prevent the API key is recorded in web or proxy server log files.
+We recommend using a POST request to prevent the API key from being recorded in web or proxy server log files.
 :::::::::::
 
 
