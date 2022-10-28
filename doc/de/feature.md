@@ -1,6 +1,6 @@
 # Funktionalität
 
-Dieses Paket stellt einen Webservice zum Monitoring. Er liefert Informationen über den Status der Daemon Tasks, sowie den Mailqueue Status.
+Dieses Paket stellt einen Webservice zum Monitoring. Er liefert Informationen über den Status der Daemon-Tasks sowie den Mail-Queue-Status.
 
 Im Standard sind folgende Module enthalten:
 
@@ -24,14 +24,12 @@ Im Standard sind folgende Module enthalten:
 - TicketUnlockTimeout
 - WebUploadCacheCleanup
 
-Zusätzlich sind auch GenericAgents enthalten die zeitgesteuert ausgeführt werden.
+Zusätzlich sind auch Generic-Agents enthalten, die zeitgesteuert ausgeführt werden.
 
-Der zum Aufruf benötigte API-Key wird automatisch erzeugt und kann in der System-Konfiguration nachträglich geändert werden.
-
-Der Name der Einstellung lautet `Znuny::HealthStatus::API::Key`.
+Der zum Aufruf benötigte API-Key wird automatisch erzeugt und kann in der System-Konfiguration `Znuny::HealthStatus::API::Key` nachträglich geändert werden.
 
 
-Beispiel Abfrage:
+Beispiel-Abfrage:
 
 ```bash
 $ URL="https://HOST/otrs/nph-genericinterface.pl/Webservice/HealthStatus/HealthStatusGet"

@@ -1,5 +1,5 @@
 # --
-# Copyright (C) 2012-2022 Znuny GmbH, http://znuny.com/
+# Copyright (C) 2012-2022 Znuny GmbH, https://znuny.com/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file COPYING for license information (AGPL). If you
@@ -111,11 +111,10 @@ sub Run {
             chop($Header);
 
             # Convert 'This is an entry' into 'ThisIsAnEntry'
-            my @HeaderStrings = split( /\s+/, $Header );
-            @HeaderStrings = map { ucfirst($_) } @HeaderStrings;
-            $Header        = join '', @HeaderStrings;
+            $Header = $Self->_CamelCaseString( String => $Header );
+            my $Name = $Self->_CamelCaseString( String => $DataRow->{Name} );
 
-            $SummaryData{$Header}->{ $DataRow->{Name} } = $DataRow;
+            $SummaryData{$Header}->{$Name} = $DataRow;
         }
     }
 
@@ -129,6 +128,18 @@ sub Run {
         Success => 1,
         Data    => \%SummaryData,
     };
+}
+
+sub _CamelCaseString {
+    my ( $Self, %Param ) = @_;
+
+    return '' if !IsStringWithData( $Param{String} );
+
+    my @Parts = split /\s+/, $Param{String};
+    @Parts = map { ucfirst($_) } @Parts;
+    my $CamelCaseString = join '', @Parts;
+
+    return $CamelCaseString;
 }
 
 1;
