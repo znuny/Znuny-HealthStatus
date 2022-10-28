@@ -139,6 +139,12 @@ sub _CamelCaseString {
     @Parts = map { ucfirst($_) } @Parts;
     my $CamelCaseString = join '', @Parts;
 
+    # If first character is not a letter (a-z), add an underscore as prefix.
+    # This ensures valid XML tags in the output.
+    if ( $CamelCaseString !~ m{\A[a-z]}i ) {
+        $CamelCaseString = '_' . $CamelCaseString;
+    }
+
     return $CamelCaseString;
 }
 
