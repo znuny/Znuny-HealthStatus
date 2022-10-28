@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <otrs_package version="1.0">
     <Name>Znuny-HealthStatus</Name>
-    <Version>6.4.1</Version>
+    <Version>6.4.2</Version>
+    <ChangeLog Version="6.4.2" Date="2022-10-28 13:22:36 +0200">Added underscore to keys that don't start with a-z.</ChangeLog>
     <ChangeLog Version="6.4.1" Date="2022-10-25 11:01:37 +0200">Initial release for Znuny 6.4.</ChangeLog>
     <ChangeLog Version="6.0.1" Date="2022-10-07 00:00:32 +0200">Initial release</ChangeLog>
     <Framework>6.4.x</Framework>
