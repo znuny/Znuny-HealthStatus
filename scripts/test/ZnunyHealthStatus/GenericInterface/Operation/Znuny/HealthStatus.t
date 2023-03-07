@@ -81,6 +81,18 @@ $UnitTestWebserviceObject->Process(
             MailQueue => {
                 Count => 0,
             },
+            Daemon           => 'Not running',
+            CommunicationLog => {
+                Communications => {
+                    AverageProcessingTime => 0,
+                    Health                => 'OK',
+                    All                   => 0,
+                    Successful            => 0,
+                    Processing            => 0,
+                    Failed                => 0,
+                },
+                Accounts => '',
+            },
         },
         Success => 1
     },

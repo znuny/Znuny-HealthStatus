@@ -10,12 +10,16 @@ package Kernel::GenericInterface::Operation::Znuny::HealthStatus;
 
 use strict;
 use warnings;
+use utf8;
 
 use Kernel::System::VariableCheck qw(:all);
 
 our @ObjectDependencies = (
     'Kernel::Config',
+    'Kernel::System::Cache',
     'Kernel::System::MailQueue',
+    'Kernel::System::CommunicationLog::DB',
+    'Kernel::System::DateTime',
 );
 
 sub new {
@@ -39,14 +43,16 @@ sub new {
 sub Run {
     my ( $Self, %Param ) = @_;
 
+    my $ConfigObject             = $Kernel::OM->Get('Kernel::Config');
+    my $MailQueueObject          = $Kernel::OM->Get('Kernel::System::MailQueue');
+    my $CommunicationLogDBObject = $Kernel::OM->Get('Kernel::System::CommunicationLog::DB');
+    my $CacheObject              = $Kernel::OM->Get('Kernel::System::Cache');
+
     if ( !IsHashRefWithData( $Param{Data} ) ) {
         return $Self->{DebuggerObject}->Error(
             Summary => 'Got parameter "Data" but it is not a hash ref in operation Znuny::HealthStatus!'
         );
     }
-
-    my $ConfigObject    = $Kernel::OM->Get('Kernel::Config');
-    my $MailQueueObject = $Kernel::OM->Get('Kernel::System::MailQueue');
 
     # get daemon modules from SysConfig
     my $DaemonModuleConfig = $ConfigObject->Get('DaemonModules') || {};
@@ -122,7 +128,117 @@ sub Run {
     my $List      = $MailQueueObject->List();
     my $ListCount = scalar @{$List};
 
-    $SummaryData{'MailQueue'}->{'Count'} = $ListCount;
+    $SummaryData{MailQueue}->{Count} = $ListCount;
+
+    # Communication Log Information
+    my $CommunicationLogHoursToCheck = 1;
+
+    # Override if parameter LogHours exists and it's a positive number
+    if ( $Param{Data}->{LogHours} ) {
+        my $Hours = $Param{Data}->{LogHours};
+        if ( IsNumber($Hours) && $Hours > 0 ) {
+            $CommunicationLogHoursToCheck = $Hours;
+        }
+    }
+    my $DateTimeObject = $Kernel::OM->Create('Kernel::System::DateTime');
+    $DateTimeObject->Subtract( Hours => $CommunicationLogHoursToCheck );
+    my $StartTime = $DateTimeObject->ToString();
+
+    # Collect different status from communication log
+    my $TotalCommunicationCount = 0;
+    my @Filters                 = qw( Successful Processing Failed );
+    for my $Filter (@Filters) {
+        my $Communications = $CommunicationLogDBObject->CommunicationList(
+            StartDate => $StartTime,
+            OrderBy   => 'Down',
+            SortBy    => 'StartTime',
+            Status    => $Filter,
+        ) // [];
+
+        my $Count = @{$Communications};
+        $TotalCommunicationCount += $Count;
+
+        $SummaryData{CommunicationLog}->{Communications}->{$Filter} = $Count;
+    }
+    $SummaryData{CommunicationLog}->{Communications}->{All} = $TotalCommunicationCount;
+
+    # Communication health as text
+    my $CommunicationHealth = 'OK';
+    if ( $SummaryData{CommunicationLog}->{Communications}->{Failed} ) {
+        $CommunicationHealth = 'Critical';
+        if ( $SummaryData{CommunicationLog}->{Communications}->{Successful} ) {
+            $CommunicationHealth = 'Warning';
+        }
+    }
+    $SummaryData{CommunicationLog}->{Communications}->{Health} = $CommunicationHealth;
+
+    # Average processing time of the last hour
+    my $AverageSeconds = $CommunicationLogDBObject->CommunicationList(
+        StartDate => $StartTime,
+        Result    => 'AVERAGE',
+    );
+    $SummaryData{CommunicationLog}->{Communications}->{AverageProcessingTime} = int( $AverageSeconds // 0 );
+
+    # Collect accounts
+    my $Connections = $CommunicationLogDBObject->GetConnectionsObjectsAndCommunications(
+        ObjectLogStartDate => $StartTime,
+    );
+    if ( !IsArrayRefWithData($Connections) ) {
+        $SummaryData{CommunicationLog}->{Accounts} = '';
+    }
+    else {
+        my %Account;
+
+        for my $Connection ( @{$Connections} ) {
+            my $AccountKey = $Connection->{AccountType};
+            if ( $Connection->{AccountID} ) {
+                $AccountKey .= "::$Connection->{AccountID}";
+            }
+
+            if ( !$Account{$AccountKey} ) {
+                $Account{$AccountKey} = {
+                    AccountID   => $Connection->{AccountID},
+                    AccountType => $Connection->{AccountType},
+                    Transport   => $Connection->{Transport},
+                };
+            }
+
+            $Account{$AccountKey}->{ $Connection->{ObjectLogStatus} } //= [];
+
+            push @{ $Account{$AccountKey}->{ $Connection->{ObjectLogStatus} } },
+                $Connection->{CommunicationID};
+        }
+
+        for my $AccountKey ( sort keys %Account ) {
+            my $Health = 'OK';
+
+            if ( $Account{$AccountKey}->{Failed} ) {
+                $Health = 'Critical';
+                if ( $Account{$AccountKey}->{Successful} ) {
+                    $Health = 'Warning';
+                }
+            }
+
+            $Account{$AccountKey}->{Status} = $Health;
+            delete $Account{$AccountKey}->{Successful};
+            delete $Account{$AccountKey}->{Processing};
+            delete $Account{$AccountKey}->{Failed};
+            delete $Account{$AccountKey}->{AccountID} if !$Account{$AccountKey}->{AccountID};
+
+            push @{ $SummaryData{'CommunicationLog'}->{'Accounts'}->{ $Account{$AccountKey}->{AccountType} } },
+                $Account{$AccountKey};
+        }
+    }
+
+    # Check for running daemon
+    my $NodeID = $ConfigObject->Get('NodeID') // 1;
+
+    my $Running = $CacheObject->Get(
+        Type => 'DaemonRunning',
+        Key  => $NodeID,
+    );
+
+    $SummaryData{Daemon} = $Running ? 'Running' : 'Not running';
 
     return {
         Success => 1,

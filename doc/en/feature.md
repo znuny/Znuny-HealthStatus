@@ -1,32 +1,19 @@
 # Functionality
 
-This package contains a monitoring web service which provides information and details about the daemon tasks and the mail queue state.
+This package provides a web service for monitoring. The web service provides information about the status of the daemon tasks and e-mail communication.
 
-These are the default modules from the recurrent cron tasks:
+The following information is included:
 
-- ArticleSearchIndexRebuild
-- CommunicationLogDelete
-- ConfigurationDeploymentCleanup
-- CoreCacheCleanup
-- EscalationCheck
-- GenerateDashboardStats
-- GeneticInterfaceDebugLogCleanup
-- LoaderCacheDelete
-- MailAccountFetch
-- MailQueueSend
-- RenewCustomerSMIMECertificates
-- SessionDeleteExpired
-- SpoolMailsReprocess
-- TicketAcceleratorRebuild
-- TicketDraftDeleteExpired
-- TicketNumberCounterCleanup
-- TicketPendingCheck
-- TicketUnlockTimeout
-- WebUploadCacheCleanup
+1. the daemon status
+2. number of e-mails waiting in the Znuny mail queue
+3. regularly executed tasks of the daemon
+4. regularly running generic agents
+5. currently running daemon tasks
+6. pending daemon tasks
+7. information on the communication protocol and the e-mail accounts
 
-Automatically executed (scheduled) generic agents are also returned by the web service.
-
-The API key required for the request is generated automatically and can be changed later in the system configuration `Znuny::HealthStatus::API::Key`.
+The API key required for the call is generated automatically and can be changed later in the system configuration `Znuny::HealthStatus::API::Key`.
+You can use the optional parameter `LogHours` to change how far back the communication protocol is checked. The default time is one hour.
 
 
 Example requests:
@@ -38,7 +25,7 @@ $ curl "${URL}?APIKey=jhgfdsaewrtzui1234567"
 ```
 
 ::: warning  :::
-We recommend using a POST request to prevent the API key from being recorded in web or proxy server log files.
+We recommend using a POST request to prevent the API key from being stored in web or proxy server log files.
 :::::::::::
 
 
@@ -54,14 +41,6 @@ A response could look like this:
       "LastExecutionTime": "2021-11-18 14:55:00",
       "LastWorkerStatus": "Success",
       "NextExecutionTime": "2021-11-18 16:55:00"
-    },
-    "EscalationCheck": {
-      "LastWorkerRunningTime": "1.0 Second(s)",
-      "Name": "EscalationCheck",
-      "Type": "Cron",
-      "NextExecutionTime": "2021-11-18 16:10:00",
-      "LastExecutionTime": "2021-11-18 15:20:00",
-      "LastWorkerStatus": "Success"
     },
     "SpoolMailsReprocess": {
       "LastWorkerStatus": "N/A",
@@ -79,38 +58,6 @@ A response could look like this:
       "Name": "SessionDeleteExpired",
       "LastWorkerRunningTime": "< 1 Second"
     },
-    "GeneticInterfaceDebugLogCleanup": {
-      "NextExecutionTime": "2021-11-19 03:02:00",
-      "LastWorkerStatus": "N/A",
-      "LastExecutionTime": "2021-11-18 03:02:00",
-      "Name": "GeneticInterfaceDebugLogCleanup",
-      "LastWorkerRunningTime": "N/A",
-      "Type": "Cron"
-    },
-    "CoreCacheCleanup": {
-      "Name": "CoreCacheCleanup",
-      "LastWorkerRunningTime": "N/A",
-      "Type": "Cron",
-      "NextExecutionTime": "2021-11-21 00:20:00",
-      "LastWorkerStatus": "N/A",
-      "LastExecutionTime": "2021-11-14 00:20:00"
-    },
-    "ArticleSearchIndexRebuild": {
-      "LastExecutionTime": "2021-11-18 15:22:00",
-      "LastWorkerStatus": "Success",
-      "NextExecutionTime": "2021-11-18 16:08:00",
-      "Type": "Cron",
-      "LastWorkerRunningTime": "< 1 Second",
-      "Name": "ArticleSearchIndexRebuild"
-    },
-    "TicketUnlockTimeout": {
-      "Name": "TicketUnlockTimeout",
-      "LastWorkerRunningTime": "< 1 Second",
-      "Type": "Cron",
-      "NextExecutionTime": "2021-11-18 16:35:00",
-      "LastWorkerStatus": "Success",
-      "LastExecutionTime": "2021-11-18 14:35:00"
-    },
     "MailQueueSend": {
       "LastExecutionTime": "2021-11-18 15:22:00",
       "LastWorkerStatus": "Success",
@@ -119,14 +66,6 @@ A response could look like this:
       "LastWorkerRunningTime": "< 1 Second",
       "Name": "MailQueueSend"
     },
-    "TicketAcceleratorRebuild": {
-      "LastWorkerStatus": "N/A",
-      "LastExecutionTime": "2021-11-18 01:01:00",
-      "NextExecutionTime": "2021-11-19 01:01:00",
-      "Type": "Cron",
-      "Name": "TicketAcceleratorRebuild",
-      "LastWorkerRunningTime": "N/A"
-    },
     "GenerateDashboardStats": {
       "LastWorkerRunningTime": "< 1 Second",
       "Name": "GenerateDashboardStats",
@@ -134,14 +73,6 @@ A response could look like this:
       "NextExecutionTime": "2021-11-18 17:05:00",
       "LastExecutionTime": "2021-11-18 15:05:00",
       "LastWorkerStatus": "Success"
-    },
-    "ConfigurationDeploymentCleanup": {
-      "LastWorkerRunningTime": "N/A",
-      "Name": "ConfigurationDeploymentCleanup",
-      "Type": "Cron",
-      "NextExecutionTime": "2021-11-21 00:40:00",
-      "LastExecutionTime": "2021-11-14 00:40:00",
-      "LastWorkerStatus": "N/A"
     },
     "TicketPendingCheck": {
       "LastWorkerStatus": "Success",
@@ -159,22 +90,6 @@ A response could look like this:
       "LastExecutionTime": "2021-11-18 15:20:00",
       "LastWorkerStatus": "Success"
     },
-    "LoaderCacheDelete": {
-      "LastWorkerStatus": "N/A",
-      "LastExecutionTime": "2021-11-14 00:30:00",
-      "NextExecutionTime": "2021-11-21 00:30:00",
-      "Type": "Cron",
-      "Name": "LoaderCacheDelete",
-      "LastWorkerRunningTime": "N/A"
-    },
-    "WebUploadCacheCleanup": {
-      "NextExecutionTime": "2021-11-18 16:46:00",
-      "LastExecutionTime": "2021-11-18 14:46:00",
-      "LastWorkerStatus": "Success",
-      "LastWorkerRunningTime": "< 1 Second",
-      "Name": "WebUploadCacheCleanup",
-      "Type": "Cron"
-    },
     "CommunicationLogDelete": {
       "NextExecutionTime": "2021-11-19 03:00:00",
       "LastExecutionTime": "2021-11-18 03:00:00",
@@ -190,14 +105,6 @@ A response could look like this:
       "NextExecutionTime": "2021-11-19 02:02:00",
       "LastWorkerStatus": "N/A",
       "LastExecutionTime": "2021-11-18 02:02:00"
-    },
-    "TicketNumberCounterCleanup": {
-      "NextExecutionTime": "2021-11-18 16:10:00",
-      "LastWorkerStatus": "Success",
-      "LastExecutionTime": "2021-11-18 15:20:00",
-      "Name": "TicketNumberCounterCleanup",
-      "LastWorkerRunningTime": "< 1 Second",
-      "Type": "Cron"
     }
   },
   "Unhandled Worker Tasks": {
@@ -209,6 +116,44 @@ A response could look like this:
   },
   "MailQueue": {
     "Count": 0
-  }
+  },
+  "CommunicationLog": {
+    "Accounts": {
+      "IMAPS": [
+        {
+          "AccountID": "1",
+          "AccountType": "IMAPS",
+          "Status": "Ok",
+          "Transport": "Email"
+        },
+        {
+          "AccountID": "2",
+          "AccountType": "POP3",
+          "Status": "Ok",
+          "Transport": "Email"
+        }
+      ],
+      "SMTPTLS": [
+        {
+          "AccountType": "SMTPTLS",
+          "Status": "Ok",
+          "Transport": "Email"
+        }
+      ],
+      "STDIN": [
+        {
+          "AccountType": "STDIN",
+          "Status": "Ok",
+          "Transport": "Email"
+        }
+      ]
+    },
+    "All": 2760,
+    "AverageProcessingTime": 0.6,
+    "Failed": 0,
+    "Health": "OK",
+    "Processing": 1,
+    "Successful": 2759
+  },
 }
 ```
