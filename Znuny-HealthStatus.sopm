@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <otrs_package version="1.0">
     <Name>Znuny-HealthStatus</Name>
-    <Version>6.5.1</Version>
+    <Version>6.5.2</Version>
     <Framework>6.5.x</Framework>
     <Vendor>Znuny GmbH</Vendor>
     <URL>http://znuny.com/</URL>
     <License>GNU AFFERO GENERAL PUBLIC LICENSE Version 3, November 2007</License>
     <Description Lang="en">This package contains the functionality to provide monitoring information.</Description>
     <Description Lang="de">Dieses Paket enthält die Funktionalität um Monitoring Informationen bereitzustellen.</Description>
+    <ChangeLog Version="6.5.2" Date="2023-03-07 19:54:31 +0100">Added communication log details</ChangeLog>
     <ChangeLog Version="6.5.1" Date="2023-02-20 14:18:49 +0100">Initial release for Znuny 6.5.</ChangeLog>
     <ChangeLog Version="6.4.2" Date="2022-10-28 13:22:36 +0200">Added underscore to keys that don't start with a-z.</ChangeLog>
     <ChangeLog Version="6.4.1" Date="2022-10-25 11:01:37 +0200">Initial release for Znuny 6.4.</ChangeLog>
