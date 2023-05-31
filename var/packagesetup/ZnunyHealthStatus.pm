@@ -119,7 +119,7 @@ sub CodeUninstall {
 
 creates or updates web services
 
-    # installs all .yml files in $OTRS/scripts/webservices/
+    # installs all .yml files in $Home/scripts/webservices/
     # name of the file will be the name of the web service
 
     my $Success = $ZnunyHelperObject->_WebserviceCreate(

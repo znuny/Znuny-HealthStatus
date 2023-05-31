@@ -19,7 +19,7 @@ You can use the optional parameter `LogHours` to change how far back the communi
 Example requests:
 
 ```bash
-$ URL="https://HOST/otrs/nph-genericinterface.pl/Webservice/HealthStatus/HealthStatusGet"
+$ URL="https://HOST/znuny/nph-genericinterface.pl/Webservice/HealthStatus/HealthStatusGet"
 $ curl -H 'Content-type: text/json' -X POST -d '{"APIKey": "jhgfdsaewrtzui1234567"}' "$URL"
 $ curl "${URL}?APIKey=jhgfdsaewrtzui1234567"
 ```

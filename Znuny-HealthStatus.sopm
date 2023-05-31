@@ -2,7 +2,7 @@
 <otrs_package version="1.0">
     <Name>Znuny-HealthStatus</Name>
     <Version>6.5.2</Version>
-    <Framework>6.5.x</Framework>
+    <Framework>7.0.x</Framework>
     <Vendor>Znuny GmbH</Vendor>
     <URL>http://znuny.com/</URL>
     <License>GNU AFFERO GENERAL PUBLIC LICENSE Version 3, November 2007</License>
