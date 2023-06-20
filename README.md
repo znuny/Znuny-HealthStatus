@@ -13,21 +13,19 @@ Provides a web service operation and web service to access data of your Znuny in
 **Installation**
 
 Install it via the "Znuny OpenSource Add-ons" repository from the package manager or
-download the [package](https://addons.znuny.com/api/addon_repos/public/2555/latest) and upload it via admin interface -> package manager.
+download the [package](https://addons.znuny.com/api/addon_repos/public/3025/latest) and upload it via admin interface -> package manager.
 
 **Usage**
 
-See the included documentation
+See the included documentation.
 
 **Download**
 
-Download the [latest version](https://addons.znuny.com/api/addon_repos/public/2555/latest).
+Download the [latest version](https://addons.znuny.com/api/addon_repos/public/3025/latest).
 
 **Professional Support**
 
 For this add-on and for Znuny in general visit [www.znuny.com](https://www.znuny.com). Looking forward to hear from you!
-
-Enjoy!
 
 Your Znuny Team!
 
