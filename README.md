@@ -1,6 +1,6 @@
 ![Znuny logo](https://www.znuny.com/assets/images/logo_small.png)
 
-![Build status](https://badge.proxy.znuny.com/Znuny-HealthStatus/rel-7_1)
+![Build status](https://badge.proxy.znuny.com/Znuny-HealthStatus/rel-7_2)
 
 Znuny-HealthStatus
 ==================
@@ -8,7 +8,7 @@ Provides a web service operation and web service to access data of your Znuny in
 
 **Prerequisites**
 
-- Znuny 7.1
+- Znuny 7.2
 
 **Installation**
 
