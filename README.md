@@ -1,6 +1,13 @@
-![Znuny logo](https://www.znuny.com/assets/images/logo_small.png)
+<div align="center">
+  <a href="https://www.znuny.org">
+    <picture>
+      <source media="(prefers-color-scheme: dark)" srcset="https://www.znuny.com/assets/znuny-logo.svg">
+      <img alt="Znuny" src="https://www.znuny.com/assets/znuny-logo-black.svg" width="300">
+    </picture>
+  </a>
 
-![Build status](https://badge.proxy.znuny.com/Znuny-HealthStatus/rel-7_3)
+  ![Build status](https://badge.proxy.znuny.com/Znuny-HealthStatus/dev)
+</div>
 
 Znuny-HealthStatus
 ==================
