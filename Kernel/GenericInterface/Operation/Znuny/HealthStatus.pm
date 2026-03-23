@@ -17,6 +17,7 @@ use Kernel::System::VariableCheck qw(:all);
 our @ObjectDependencies = (
     'Kernel::Config',
     'Kernel::System::Cache',
+    'Kernel::System::Main',
     'Kernel::System::MailQueue',
     'Kernel::System::CommunicationLog::DB',
     'Kernel::System::DateTime',
@@ -229,6 +230,21 @@ sub Run {
                 $Account{$AccountKey};
         }
     }
+
+    # Spool Mails
+    my $Home     = $ConfigObject->Get('Home');
+    my $SpoolDir = "$Home/var/spool";
+
+    my @SpoolMails = $Kernel::OM->Get('Kernel::System::Main')->DirectoryRead(
+        Directory => $SpoolDir,
+        Filter    => '*',
+    );
+
+    my $SpoolMailCount = scalar @SpoolMails;
+    $SummaryData{UnprocessedEmails} = {
+        Count  => $SpoolMailCount,
+        Health => $SpoolMailCount ? 'Critical' : 'OK',
+    };
 
     # Check for running daemon
     my $NodeID = $ConfigObject->Get('NodeID') // 1;

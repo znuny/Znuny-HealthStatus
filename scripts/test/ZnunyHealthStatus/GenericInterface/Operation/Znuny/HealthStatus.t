@@ -93,6 +93,10 @@ $UnitTestWebserviceObject->Process(
                 },
                 Accounts => '',
             },
+            UnprocessedEmails => {
+                Count  => 0,
+                Health => 'OK',
+            }
         },
         Success => 1
     },
