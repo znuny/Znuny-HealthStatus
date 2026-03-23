@@ -6,7 +6,7 @@
     </picture>
   </a>
 
-  ![Build status](https://badge.proxy.znuny.com/Znuny-HealthStatus/private-jp-issue7-rel-6_5)
+  ![Build status](https://badge.proxy.znuny.com/Znuny-HealthStatus/rel-6_5)
 </div>
 
 <picture>

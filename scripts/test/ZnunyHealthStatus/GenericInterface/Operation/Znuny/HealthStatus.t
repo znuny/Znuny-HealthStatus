@@ -93,6 +93,13 @@ $UnitTestWebserviceObject->Process(
                 },
                 Accounts => '',
             },
+            Sessions => {
+                SessionsAgent          => 0,
+                SessionsAgentUnique    => 0,
+                SessionsCustomer       => 0,
+                SessionsCustomerUnique => 0,
+                SessionsTotal          => 0,
+            },
             UnprocessedEmails => {
                 Count  => 0,
                 Health => 'OK',

@@ -16,6 +16,7 @@ use Kernel::System::VariableCheck qw(:all);
 
 our @ObjectDependencies = (
     'Kernel::Config',
+    'Kernel::System::AuthSession',
     'Kernel::System::Cache',
     'Kernel::System::Main',
     'Kernel::System::MailQueue',
@@ -230,6 +231,25 @@ sub Run {
                 $Account{$AccountKey};
         }
     }
+
+    # Active sessions
+    my $AuthSessionObject = $Kernel::OM->Get('Kernel::System::AuthSession');
+
+    my %AgentSessions    = $AuthSessionObject->GetActiveSessions( UserType => 'User' );
+    my %CustomerSessions = $AuthSessionObject->GetActiveSessions( UserType => 'Customer' );
+
+    my $SessionsAgent          = $AgentSessions{Total}    // 0;
+    my $SessionsCustomer       = $CustomerSessions{Total} // 0;
+    my $SessionsAgentUnique    = scalar keys %{ $AgentSessions{PerUser}    // {} };
+    my $SessionsCustomerUnique = scalar keys %{ $CustomerSessions{PerUser} // {} };
+
+    $SummaryData{Sessions} = {
+        SessionsTotal          => $SessionsAgent + $SessionsCustomer,
+        SessionsAgent          => $SessionsAgent,
+        SessionsCustomer       => $SessionsCustomer,
+        SessionsAgentUnique    => $SessionsAgentUnique,
+        SessionsCustomerUnique => $SessionsCustomerUnique,
+    };
 
     # Spool Mails
     my $Home     = $ConfigObject->Get('Home');
