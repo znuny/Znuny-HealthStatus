@@ -243,12 +243,53 @@ sub Run {
     my $SessionsAgentUnique    = scalar keys %{ $AgentSessions{PerUser}    // {} };
     my $SessionsCustomerUnique = scalar keys %{ $CustomerSessions{PerUser} // {} };
 
+    # Unique active users are those returned by GetActiveSessions (within idle time limit).
+    my %AgentUniqueActive    = %{ $AgentSessions{PerUser}    // {} };
+    my %CustomerUniqueActive = %{ $CustomerSessions{PerUser} // {} };
+
+    # Unique inactive users: sessions that have exceeded the idle time but not yet been removed.
+    my $MaxSessionIdleTime = $ConfigObject->Get('SessionMaxIdleTime');
+    my $TimeNow            = $Kernel::OM->Create('Kernel::System::DateTime')->ToEpoch();
+
+    my %AgentUniqueInactive;
+    my %CustomerUniqueInactive;
+
+    SESSIONID:
+    for my $SessionID ( $AuthSessionObject->GetAllSessionIDs() ) {
+
+        my %SessionData = $AuthSessionObject->GetSessionIDData( SessionID => $SessionID );
+
+        next SESSIONID if !%SessionData;
+
+        my $UserType        = $SessionData{UserType}        || '';
+        my $UserLastRequest = $SessionData{UserLastRequest} || $TimeNow;
+        my $UserLogin       = $SessionData{UserLogin}       || '';
+        my $SessionSource   = $SessionData{SessionSource}   || '';
+
+        next SESSIONID if $SessionSource eq 'GenericInterface';
+        next SESSIONID if !$UserLogin;
+
+        # Skip sessions that are still within the idle time — those are already counted as active.
+        next SESSIONID if ( $UserLastRequest + $MaxSessionIdleTime ) >= $TimeNow;
+
+        if ( $UserType eq 'User' ) {
+            $AgentUniqueInactive{$UserLogin} = 1;
+        }
+        elsif ( $UserType eq 'Customer' ) {
+            $CustomerUniqueInactive{$UserLogin} = 1;
+        }
+    }
+
     $SummaryData{Sessions} = {
-        SessionsTotal          => $SessionsAgent + $SessionsCustomer,
-        SessionsAgent          => $SessionsAgent,
-        SessionsCustomer       => $SessionsCustomer,
-        SessionsAgentUnique    => $SessionsAgentUnique,
-        SessionsCustomerUnique => $SessionsCustomerUnique,
+        SessionsTotal                  => $SessionsAgent + $SessionsCustomer,
+        SessionsAgent                  => $SessionsAgent,
+        SessionsCustomer               => $SessionsCustomer,
+        SessionsAgentUnique            => $SessionsAgentUnique,
+        SessionsCustomerUnique         => $SessionsCustomerUnique,
+        SessionsAgentUniqueActive      => scalar keys %AgentUniqueActive,
+        SessionsAgentUniqueInactive    => scalar keys %AgentUniqueInactive,
+        SessionsCustomerUniqueActive   => scalar keys %CustomerUniqueActive,
+        SessionsCustomerUniqueInactive => scalar keys %CustomerUniqueInactive,
     };
 
     # Spool Mails
