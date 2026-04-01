@@ -94,11 +94,16 @@ $UnitTestWebserviceObject->Process(
                 Accounts => '',
             },
             Sessions => {
-                SessionsAgent          => 0,
-                SessionsAgentUnique    => 0,
-                SessionsCustomer       => 0,
-                SessionsCustomerUnique => 0,
-                SessionsTotal          => 0,
+                SessionsAgent                  => 0,
+                SessionsAgentUnique            => 0,
+                SessionsAgentUniqueActive      => 0,
+                SessionsAgentUniqueInactive    => 0,
+                SessionsCustomer               => 0,
+                SessionsCustomerUnique         => 0,
+                SessionsCustomerUniqueActive   => 0,
+                SessionsCustomerUniqueInactive => 0,
+                SessionsTotal                  => 0,
+
             },
             UnprocessedEmails => {
                 Count  => 0,
