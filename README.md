@@ -9,11 +9,6 @@
   ![Build status](https://badge.proxy.znuny.com/Znuny-HealthStatus/rel-6_5)
 </div>
 
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="https://www.znuny.com/assets/znuny-logo.svg">
-  <img alt="Znuny" src="https://www.znuny.com/assets/znuny-logo-black.svg">
-</picture>
-
 Znuny-HealthStatus
 ==================
 Provides a web service operation and web service to access data of your Znuny instance to check the state.
@@ -24,16 +19,11 @@ Provides a web service operation and web service to access data of your Znuny in
 
 **Installation**
 
-Install it via the "Znuny OpenSource Add-ons" repository from the package manager or
-download the [package](https://addons.znuny.com/api/addon_repos/public/2555/latest) and upload it via admin interface -> package manager.
+Install it via the "Znuny OpenSource Add-ons" repository from the package manager.
 
 **Usage**
 
-See the included documentation
-
-**Download**
-
-Download the [latest version](https://addons.znuny.com/api/addon_repos/public/2555/latest).
+See the included documentation. To use Znuny-HealthStatus with Icinga2/Nagios see [check_znuny](https://github.com/znuny/check_znuny).
 
 **Professional Support**
 
