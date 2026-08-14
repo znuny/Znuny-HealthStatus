@@ -24,11 +24,7 @@ download the [package](https://addons.znuny.com/api/addon_repos/public/3025/late
 
 **Usage**
 
-See the included documentation.
-
-**Download**
-
-Download the [latest version](https://addons.znuny.com/api/addon_repos/public/3025/latest).
+See the included documentation. To use Znuny-HealthStatus with Icinga2/Nagios see [check_znuny](https://github.com/znuny/check_znuny).
 
 **Professional Support**
 
