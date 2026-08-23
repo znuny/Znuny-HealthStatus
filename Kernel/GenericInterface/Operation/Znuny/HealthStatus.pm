@@ -243,16 +243,26 @@ sub Run {
     my $SessionsAgentUnique    = scalar keys %{ $AgentSessions{PerUser}    // {} };
     my $SessionsCustomerUnique = scalar keys %{ $CustomerSessions{PerUser} // {} };
 
-    # Unique active users are those returned by GetActiveSessions (within idle time limit).
-    my %AgentUniqueActive    = %{ $AgentSessions{PerUser}    // {} };
-    my %CustomerUniqueActive = %{ $CustomerSessions{PerUser} // {} };
+    # Unique active/inactive users, counted the same way as the "who is online" dashboard widget
+    # (Kernel::Output::HTML::Dashboard::UserOnline): every session is inspected once, regardless of
+    # its source, deduplicated by UserID (not UserLogin - the same account's sessions can carry
+    # differently-cased login strings), and a user only counts as inactive if none of their
+    # sessions are still within the idle time.
+    #
+    # Within the active set, Online/Away mirrors the dashboard's per-row status icon: Online means
+    # at least one session had a request within the (much shorter) online threshold, Away means all
+    # of the user's active sessions are older than that but still within the idle time.
+    my $MaxSessionIdleTime             = $ConfigObject->Get('SessionMaxIdleTime');
+    my $SessionAgentOnlineThreshold    = $ConfigObject->Get('SessionAgentOnlineThreshold')    || 5;
+    my $SessionCustomerOnlineThreshold = $ConfigObject->Get('SessionCustomerOnlineThreshold') || 5;
+    my $TimeNow                        = $Kernel::OM->Create('Kernel::System::DateTime')->ToEpoch();
 
-    # Unique inactive users: sessions that have exceeded the idle time but not yet been removed.
-    my $MaxSessionIdleTime = $ConfigObject->Get('SessionMaxIdleTime');
-    my $TimeNow            = $Kernel::OM->Create('Kernel::System::DateTime')->ToEpoch();
-
+    my %AgentUniqueActive;
+    my %CustomerUniqueActive;
     my %AgentUniqueInactive;
     my %CustomerUniqueInactive;
+    my %AgentUniqueOnline;
+    my %CustomerUniqueOnline;
 
     SESSIONID:
     for my $SessionID ( $AuthSessionObject->GetAllSessionIDs() ) {
@@ -261,24 +271,36 @@ sub Run {
 
         next SESSIONID if !%SessionData;
 
-        my $UserType        = $SessionData{UserType}        || '';
-        my $UserLastRequest = $SessionData{UserLastRequest} || $TimeNow;
-        my $UserLogin       = $SessionData{UserLogin}       || '';
-        my $SessionSource   = $SessionData{SessionSource}   || '';
+        my $UserType        = $SessionData{UserType} || '';
+        my $UserID          = $SessionData{UserID};
+        my $UserLastRequest = $SessionData{UserLastRequest};
 
-        next SESSIONID if $SessionSource eq 'GenericInterface';
-        next SESSIONID if !$UserLogin;
+        next SESSIONID if $UserType ne 'User' && $UserType ne 'Customer';
+        next SESSIONID if !$UserID;
+        next SESSIONID if !$UserLastRequest;
 
-        # Skip sessions that are still within the idle time — those are already counted as active.
-        next SESSIONID if ( $UserLastRequest + $MaxSessionIdleTime ) >= $TimeNow;
+        my ( $UniqueActiveRef, $UniqueInactiveRef, $UniqueOnlineRef, $OnlineThreshold ) = $UserType eq 'User'
+            ? ( \%AgentUniqueActive, \%AgentUniqueInactive, \%AgentUniqueOnline, $SessionAgentOnlineThreshold )
+            : (
+            \%CustomerUniqueActive, \%CustomerUniqueInactive, \%CustomerUniqueOnline,
+            $SessionCustomerOnlineThreshold
+            );
 
-        if ( $UserType eq 'User' ) {
-            $AgentUniqueInactive{$UserLogin} = 1;
+        if ( ( $UserLastRequest + $MaxSessionIdleTime ) >= $TimeNow ) {
+            $UniqueActiveRef->{$UserID} = 1;
+
+            if ( ( $UserLastRequest + ( 60 * $OnlineThreshold ) ) >= $TimeNow ) {
+                $UniqueOnlineRef->{$UserID} = 1;
+            }
         }
-        elsif ( $UserType eq 'Customer' ) {
-            $CustomerUniqueInactive{$UserLogin} = 1;
+        else {
+            $UniqueInactiveRef->{$UserID} = 1;
         }
     }
+
+    # A user with another still-active session counts as active, not inactive.
+    delete $AgentUniqueInactive{$_}    for keys %AgentUniqueActive;
+    delete $CustomerUniqueInactive{$_} for keys %CustomerUniqueActive;
 
     $SummaryData{Sessions} = {
         SessionsTotal                  => $SessionsAgent + $SessionsCustomer,
@@ -288,15 +310,22 @@ sub Run {
         SessionsCustomerUnique         => $SessionsCustomerUnique,
         SessionsAgentUniqueActive      => scalar keys %AgentUniqueActive,
         SessionsAgentUniqueInactive    => scalar keys %AgentUniqueInactive,
+        SessionsAgentUniqueOnline      => scalar keys %AgentUniqueOnline,
+        SessionsAgentUniqueAway        => ( scalar keys %AgentUniqueActive ) - ( scalar keys %AgentUniqueOnline ),
         SessionsCustomerUniqueActive   => scalar keys %CustomerUniqueActive,
         SessionsCustomerUniqueInactive => scalar keys %CustomerUniqueInactive,
+        SessionsCustomerUniqueOnline   => scalar keys %CustomerUniqueOnline,
+        SessionsCustomerUniqueAway     => ( scalar keys %CustomerUniqueActive )
+            - ( scalar keys %CustomerUniqueOnline ),
     };
 
     # Spool Mails
     my $Home     = $ConfigObject->Get('Home');
     my $SpoolDir = "$Home/var/spool";
 
-    my @SpoolMails = $Kernel::OM->Get('Kernel::System::Main')->DirectoryRead(
+    my $MainObject = $Kernel::OM->Get('Kernel::System::Main');
+
+    my @SpoolMails = $MainObject->DirectoryRead(
         Directory => $SpoolDir,
         Filter    => '*',
     );
