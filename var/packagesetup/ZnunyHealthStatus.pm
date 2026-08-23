@@ -18,8 +18,6 @@ our @ObjectDependencies = (
     'Kernel::System::ZnunyHelper',
 );
 
-use Kernel::System::VariableCheck qw(:all);
-
 =head1 NAME
 
 var::packagesetup::ZnunyHealthStatus - code to execute during package installation
