@@ -15,7 +15,7 @@ Provides a web service operation and web service to access data of your Znuny in
 
 **Prerequisites**
 
-- Znuny 7.3
+- Znuny 7.5
 
 **Installation**
 

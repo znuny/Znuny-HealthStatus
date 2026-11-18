@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<otrs_package version="1.0">
+<package version="1.0">
     <Name>Znuny-HealthStatus</Name>
     <Version>7.3.4</Version>
-    <Framework>7.3.x</Framework>
+    <Framework>7.5.x</Framework>
     <Vendor>Znuny GmbH</Vendor>
     <URL>http://znuny.com/</URL>
     <License>GNU AFFERO GENERAL PUBLIC LICENSE Version 3, November 2007</License>
@@ -62,4 +62,4 @@ Added session information to the JSON output.</ChangeLog>
     <CodeUninstall Type="pre"><![CDATA[
         $Kernel::OM->Get('var::packagesetup::ZnunyHealthStatus')->CodeUninstall();
     ]]></CodeUninstall>
-</otrs_package>
+</package>
